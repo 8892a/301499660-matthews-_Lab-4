@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: Default
+  name: Asus-Zenbook
 
 steps:
 - task: UseDotNet@2
