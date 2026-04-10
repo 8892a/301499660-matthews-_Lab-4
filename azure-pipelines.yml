@@ -1,0 +1,25 @@
+trigger:
+- main
+
+pool:
+  name: Default
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'
+
+- script: dotnet restore
+  displayName: 'Restore'
+
+- script: dotnet build -c Release
+  displayName: 'Build'
+
+- script: dotnet pack -c Release -o $(Build.ArtifactStagingDirectory)
+  displayName: 'Pack NuGet'
+
+- task: NuGetAuthenticate@1
+
+- script: dotnet nuget push "$(Build.ArtifactStagingDirectory)/*.nupkg" --source "https://pkgs.dev.azure.com/kmatth26/301499660(matthews)_Lab4/_packaging/Artifact-Lab4/nuget/v3/index.json" --api-key az --skip-duplicate
+  displayName: 'Push to Azure Artifacts'
