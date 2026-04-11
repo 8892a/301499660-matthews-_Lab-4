@@ -1,25 +1,27 @@
-trigger:
-- main
+trigger: none
+
+resources:
+  pipelines:
+  - pipeline: ciBuild
+    source: 8892a.301499660-matthews-_Lab-4
+    trigger: true
 
 pool:
   name: Default
 
 steps:
+- download: ciBuild
+  artifact: drop
+
 - task: UseDotNet@2
   inputs:
     packageType: sdk
     version: 8.x
 
-- script: dotnet restore
-  displayName: Restore
+- script: |
+    echo "Artifact contents:"
+    dir $(Pipeline.Workspace)\ciBuild\drop
+  displayName: Show artifact
 
-- script: dotnet build -c Release
-  displayName: Build
-
-- script: dotnet publish WebApplication1/WebApplication1.csproj -c Release -o $(Build.ArtifactStagingDirectory)
-  displayName: Publish
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: drop
+- script: echo "Deployment successful"
+  displayName: Deploy Step
