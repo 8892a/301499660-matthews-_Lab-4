@@ -16,8 +16,11 @@ steps:
 - script: dotnet build -c Release
   displayName: Build
 
-- script: dotnet publish WebApplication1/WebApplication1.csproj -c Release -o $(Build.ArtifactStagingDirectory)/publish
-  displayName: Publish
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    projects: 'WebApplication1/WebApplication1.csproj'
+    arguments: '-c Release -o $(Build.ArtifactStagingDirectory)/publish'
 
 - task: PublishBuildArtifacts@1
   inputs:
