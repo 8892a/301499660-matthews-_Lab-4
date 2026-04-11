@@ -16,5 +16,5 @@ steps:
 - script: dotnet build -c Release
   displayName: 'Build'
 
-- script: dotnet publish -c Release -o $(Build.ArtifactStagingDirectory)
+- script: dotnet publish ClassLibrary1/ClassLibrary1.csproj -c Release -o $(Build.ArtifactStagingDirectory)
   displayName: 'Publish'
