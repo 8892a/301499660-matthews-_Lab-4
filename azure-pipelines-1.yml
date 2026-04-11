@@ -4,6 +4,9 @@ trigger:
 pool:
   name: Default
 
+variables:
+  buildConfiguration: 'Release'
+
 steps:
 - task: UseDotNet@2
   inputs:
@@ -11,10 +14,18 @@ steps:
     version: '8.x'
 
 - script: dotnet restore
-  displayName: 'Restore'
+  displayName: 'Restore NuGet packages'
 
-- script: dotnet build -c Release
-  displayName: 'Build'
+- script: dotnet build --configuration $(buildConfiguration) --no-restore
+  displayName: 'Build Solution'
 
-- script: dotnet publish ClassLibrary1/ClassLibrary1.csproj -c Release -o $(Build.ArtifactStagingDirectory)
-  displayName: 'Publish'
+- script: dotnet publish WebApplication1/WebApplication1.csproj ^
+    --configuration $(buildConfiguration) ^
+    --output $(Build.ArtifactStagingDirectory)
+  displayName: 'Publish Web Application'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
