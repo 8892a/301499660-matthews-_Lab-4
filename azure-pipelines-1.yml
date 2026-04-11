@@ -6,22 +6,25 @@ resources:
     source: 8892a.301499660-matthews-_Lab-4
     trigger: true
 
-pool:
-  name: Default
+stages:
+- stage: Deploy
+  displayName: Deploy to Lab4 Environment
+  jobs:
+  - deployment: DeployWebApp
+    displayName: Deploy ASP.NET Core Web App
+    environment: 'Lab4-Environment'
+    pool:
+      name: Default
 
-steps:
-- download: ciBuild
-  artifact: drop
+    strategy:
+      runOnce:
+        deploy:
+          steps:
 
-- task: UseDotNet@2
-  inputs:
-    packageType: sdk
-    version: 8.x
+          - download: ciBuild
+            artifact: drop
 
-- script: |
-    echo "Artifact contents:"
-    dir $(Pipeline.Workspace)\ciBuild\drop
-  displayName: Show artifact
-
-- script: echo "Deployment successful"
-  displayName: Deploy Step
+          - task: UseDotNet@2
+            inputs:
+              packageType: sdk
+              version: 8.x
