@@ -17,7 +17,7 @@ steps:
   displayName: 'Build'
 
 - script: dotnet pack "ClassLibrary1/ClassLibrary1.csproj" -c Release -o "$(Build.ArtifactStagingDirectory)"
-  displayName: 'Pack NuGet'
+  displayName: 'Pack'
 
 - task: NuGetAuthenticate@1
 
