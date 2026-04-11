@@ -16,10 +16,5 @@ steps:
 - script: dotnet build -c Release
   displayName: 'Build'
 
-- script: dotnet pack "ClassLibrary1/ClassLibrary1.csproj" -c Release -o "$(Build.ArtifactStagingDirectory)"
-  displayName: 'Pack'
-
-- task: NuGetAuthenticate@1
-
-- script: dotnet nuget push "$(Build.ArtifactStagingDirectory)\*.nupkg" --source "https://pkgs.dev.azure.com/kmatth26/301499660(matthews)_Lab4/_packaging/Artifact-Lab4/nuget/v3/index.json" --api-key az
-  displayName: 'Push to Azure Artifacts'
+- script: dotnet publish ClassLibrary1/ClassLibrary1.csproj -c Release -o $(Build.ArtifactStagingDirectory)
+  displayName: 'Publish'
