@@ -1,30 +1,25 @@
-trigger: none
+trigger:
+- main
 
-resources:
-  pipelines:
-  - pipeline: ciBuild
-    source: 8892a.301499660-matthews-_Lab-4
-    trigger: true
+pool:
+  name: Default
 
-stages:
-- stage: Deploy
-  displayName: Deploy to Lab4 Environment
-  jobs:
-  - deployment: DeployWebApp
-    displayName: Deploy ASP.NET Core Web App
-    environment: 'Lab4-Environment'
-    pool:
-      name: Default
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'
 
-    strategy:
-      runOnce:
-        deploy:
-          steps:
+- script: dotnet restore
+  displayName: Restore
 
-          - download: ciBuild
-            artifact: drop
+- script: dotnet build -c Release
+  displayName: Build
 
-          - task: UseDotNet@2
-            inputs:
-              packageType: 'sdk'
-              version: '8.x'
+- script: dotnet publish WebApplication1/WebApplication1.csproj -c Release -o $(Build.ArtifactStagingDirectory)
+  displayName: Publish
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: drop
